@@ -2,10 +2,14 @@
 
 ## Testing and Development
 
+Streamlit must be installed locally before running this repository.
+
 The development environment resides at `dev_tools/environment.yml`. To use this environment when testing and running the app locally, use the following chain of commands to manage the environment.
 
+From within the project repository root directory:
+
 - Create a `conda` environment
-  - `conda env create -f dev_tools/environment.yml`
+  - `conda env create -f environment.yml`
 - Activate the environment
   - `conda activate frost-depth`
 - Run the app locally
