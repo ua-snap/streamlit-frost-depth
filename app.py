@@ -17,7 +17,7 @@ model = st.radio(
     ("GFDL-CM3", "NCAR-CCSM4", "GISS-E2-R", "IPSL-CM5A-LR", "MRI-CGCM3"))
 scenario = st.radio(
     "RCP emissions scenario for the projected mean annual temperature",
-    ("rcp45", "rcp6", "rcp85"))
+    ("rcp45", "rcp60", "rcp85"))
 year_start, year_end = st.slider(
     'Select range for mean annual temperature summary',
     2007, 2100, (2040, 2069))
@@ -53,7 +53,7 @@ with col1:
 
 with col2:
     st.header("SOIL PARAMETERS")
-    wc_pct = st.slider("water content (percent)", 1, 50, 15)
+    wc_pct = st.slider("gravimetric water content (percent)", 1, 50, 15)
     dry_ro = st.slider("dry unit weight (pounds per cubic foot)", 20, 135, 100)
     k_avg = st.slider(
         "average thermal conductivity (BTU/(ft•hr•°F))",

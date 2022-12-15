@@ -20,7 +20,7 @@ def compute_volumetric_latent_heat_of_fusion(dry_ro, wc_pct):
 
 
 def compute_frozen_volumetric_specific_heat(dry_ro, wc_pct):
-    """Compute quantity of heat required to change the temperature of a frozen unit volume of soil by 1°F. The specific heat of soil solids is 0.17 BTU/lb • °F for most soils. Reference: https://www.wbdg.org/FFC/DOD/UFC/INACTIVE/ufc_3_130_06_2004.pdf
+    """Compute quantity of heat required to change the temperature of a frozen unit volume of soil by 1°F. The specific heat of soil solids is 0.17 BTU/lb • °F for most soils.
     Args:
         dry_ro: soil dry density (lbs per cubic foot)
         wc_pct: percent water content (percent)
@@ -32,7 +32,7 @@ def compute_frozen_volumetric_specific_heat(dry_ro, wc_pct):
 
 
 def compute_unfrozen_volumetric_specific_heat(dry_ro, wc_pct):
-    """Compute quantity of heat required to change the temperature of an unfrozen unit volume of soil by 1°F. The specific heat of soil solids is 0.17 BTU/lb • °F for most soils. Reference: https://www.wbdg.org/FFC/DOD/UFC/INACTIVE/ufc_3_130_06_2004.pdf
+    """Compute quantity of heat required to change the temperature of an unfrozen unit volume of soil by 1°F. The specific heat of soil solids is 0.17 BTU/lb • °F for most soils.
     Args:
         dry_ro: soil dry density (lbs per cubic foot)
         wc_pct: percent water content (percent)
@@ -44,7 +44,7 @@ def compute_unfrozen_volumetric_specific_heat(dry_ro, wc_pct):
 
 
 def compute_avg_volumetric_specific_heat(dry_ro, wc_pct):
-    """Compute quantity of heat required to change the temperature of an average unit volume of soil by 1°F. The specific heat of soil solids is 0.17 BTU/lb • °F for most soils. Use this function by default. Reference: https://www.wbdg.org/FFC/DOD/UFC/INACTIVE/ufc_3_130_06_2004.pdf
+    """Compute quantity of heat required to change the temperature of an average unit volume of soil by 1°F. The specific heat of soil solids is 0.17 BTU/lb • °F for most soils.
     Args:
         dry_ro: soil dry density (lbs per cubic foot)
         wc_pct: percent water content (percent)
@@ -86,7 +86,7 @@ def get_projected_mat_from_api(lat, lon, model, scenario, year_start, year_end):
 
 def get_projected_design_fi_from_api(lat, lon, model, era):
     """Query the SNAP Data API for design freezing index."""
-    api_url = "https://earthmaps.io/design_index/freezing/all/point/65.0628/-146.1627"
+    api_url = f"https://earthmaps.io/design_index/freezing/all/point/{lat}/{lon}"
     design_freezing_index_degF = requests.get(api_url).json()[model][era]["di"]
     return design_freezing_index_degF
 
@@ -177,7 +177,7 @@ def compute_depth_of_freezing(coeff, k_avg, nFI, L):
 
     Args:
         coeff: the lambda coeffcient (dimensionless)
-        k_avg: thermal conductivity of soil, average of frozen and unfrozen (BTU/(hr • ft • °F))
+        k_avg: thermal conductivity of soil, average of frozen and unfrozen (BTU/hr • ft • °F)
         nFI: surface freezing index (°F • days)
         L: volumetric latent heat of fusion (BTUs per cubic foot)
     Returns:
@@ -188,21 +188,15 @@ def compute_depth_of_freezing(coeff, k_avg, nFI, L):
 
 
 def compute_modified_bergrenn(dry_ro, wc_pct, mat, magt, d, nFI, k_avg, lat, lon, model, scenario, year_start, year_end):
-    """Compute the Modified Bergrenn Frost Depth (ft).
+    """
     Args:
-        dry_ro: soil dry density (lbs per cubic foot)
-        wc_pct: soil water content (percent)
-        mat: mean annual air temperature (°F)
-        magt: mean annual ground temperature (°F)
-        d: length of freezing duration (days)
-        nFI: surface freezing index (°F days)
-        k_avg: thermal conductivity of soil, average of frozen and unfrozen (BTU/(hr • ft • °F))
-        lat: latitude in Alaska
-        lon: longitude in Alaska
-        model: climate model for mean annual air temperature projection
-        scenario: emissions scenario for mean annual air temperature projection
-        year_start: start year for time period to average mean annual air temperature projections
-        year_end: end year for time period to average mean annual air temperature projections
+    dry_ro: soil dry density (lbs per cubic foot)
+    wc_pct: water content (percent)
+    mat: mean annual temperature (°F)
+    magt: mean annual GROUND temperature (°F)
+    d: length of freezing duration (days)
+    nFI: surface freezing index (°F • days)
+    k_avg: thermal conductivity of soil, average of frozen and unfrozen (BTU/hr • ft • °F)
     """
     mat = get_projected_mat_from_api(
         lat, lon, model, scenario, year_start, year_end)
@@ -214,5 +208,4 @@ def compute_modified_bergrenn(dry_ro, wc_pct, mat, magt, d, nFI, k_avg, lat, lon
     mu = compute_fusion_parameter(v_s, c, L)
     lambda_coeff = compute_coeff(mu, thermal_ratio)
     frost_depth = compute_depth_of_freezing(lambda_coeff, k_avg, nFI, L)
-    print(L, c, v_s, v_o, thermal_ratio, mu, lambda_coeff)
     return frost_depth

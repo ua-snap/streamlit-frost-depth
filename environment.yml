@@ -1,0 +1,7 @@
+name: frost-depth
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - pandas
+  - requests
